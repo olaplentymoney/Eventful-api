@@ -1,10 +1,12 @@
 import { Queue, QueueOptions } from 'bullmq';
 import { env } from './env';
 
-export const queueConnection = {
-  host: env.BULL_REDIS_HOST,
-  port: env.BULL_REDIS_PORT,
-};
+export const queueConnection = process.env.REDIS_URL
+  ? { url: process.env.REDIS_URL }
+  : {
+      host: env.BULL_REDIS_HOST,
+      port: env.BULL_REDIS_PORT,
+    };
 
 const defaultQueueOptions: QueueOptions = {
   connection: queueConnection,
