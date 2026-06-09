@@ -13,6 +13,7 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       { url: `${env.APP_URL}${env.API_PREFIX}`, description: 'Current server' },
+      { url: `http://localhost:3000${env.API_PREFIX}`, description: 'Local server' },
     ],
     components: {
       securitySchemes: {
@@ -59,7 +60,7 @@ const options: swaggerJsdoc.Options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: ['./src/modules/**/*.routes.ts', './src/modules/**/*.controller.ts'],
+  apis: ['./src/modules/**/*.routes.ts', './dist/modules/**/*.routes.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
