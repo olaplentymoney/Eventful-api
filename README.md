@@ -19,22 +19,30 @@ Eventful is a production-grade event ticketing platform API built with Node.js a
 
 ---
 
+## Live Demo
+
+|                  |                                                    |
+| ---------------- | -------------------------------------------------- |
+| **Base URL**     | https://eventful-api-v4wz.onrender.com             |
+| **Swagger Docs** | https://eventful-api-v4wz.onrender.com/api/v1/docs |
+| **Health Check** | https://eventful-api-v4wz.onrender.com/health      |
+
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js + TypeScript |
-| Framework | Express |
-| Database | PostgreSQL (Prisma ORM) |
-| Cache | Redis (ioredis) |
-| Queue | BullMQ |
-| Payments | Paystack |
-| Email | Nodemailer + Handlebars |
-| QR Codes | qrcode + HMAC-SHA256 signing |
-| Auth | JWT (access + refresh tokens) |
-| Validation | Zod |
-| Testing | Jest + Supertest |
-| Docs | Swagger / OpenAPI 3.0 |
+| Layer      | Technology                    |
+| ---------- | ----------------------------- |
+| Runtime    | Node.js + TypeScript          |
+| Framework  | Express                       |
+| Database   | PostgreSQL (Prisma ORM)       |
+| Cache      | Redis (ioredis)               |
+| Queue      | BullMQ                        |
+| Payments   | Paystack                      |
+| Email      | Nodemailer + Handlebars       |
+| QR Codes   | qrcode + HMAC-SHA256 signing  |
+| Auth       | JWT (access + refresh tokens) |
+| Validation | Zod                           |
+| Testing    | Jest + Supertest              |
+| Docs       | Swagger / OpenAPI 3.0         |
 
 ---
 
@@ -49,7 +57,7 @@ Eventful is a production-grade event ticketing platform API built with Node.js a
 ### Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/eventful.git
+git clone https://github.com/olaplentymoney/Eventful-api.git
 cd eventful
 npm install
 npx prisma generate
@@ -120,63 +128,73 @@ npm start
 API is live at `http://localhost:3000`
 Swagger docs at `http://localhost:3000/api/v1/docs`
 
+**Production**
+API: `https://eventful-api-v4wz.onrender.com`
+Swagger docs: `https://eventful-api-v4wz.onrender.com/api/v1/docs`
+
 ---
 
 ## API Overview
 
 ### Auth
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/v1/auth/register` | Register a new user | Public |
-| POST | `/api/v1/auth/login` | Login | Public |
-| POST | `/api/v1/auth/refresh` | Refresh access token | Public |
-| POST | `/api/v1/auth/logout` | Logout | Required |
-| GET | `/api/v1/auth/me` | Get current user | Required |
+
+| Method | Endpoint                | Description          | Auth     |
+| ------ | ----------------------- | -------------------- | -------- |
+| POST   | `/api/v1/auth/register` | Register a new user  | Public   |
+| POST   | `/api/v1/auth/login`    | Login                | Public   |
+| POST   | `/api/v1/auth/refresh`  | Refresh access token | Public   |
+| POST   | `/api/v1/auth/logout`   | Logout               | Required |
+| GET    | `/api/v1/auth/me`       | Get current user     | Required |
 
 ### Events
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| GET | `/api/v1/events` | List published events | Public |
-| GET | `/api/v1/events/:id` | Get event by ID | Public |
-| GET | `/api/v1/events/slug/:slug` | Get event by share slug | Public |
-| GET | `/api/v1/events/:id/share` | Get social share links | Public |
-| POST | `/api/v1/events` | Create event | Creator |
-| PATCH | `/api/v1/events/:id` | Update event | Creator |
-| POST | `/api/v1/events/:id/cancel` | Cancel event | Creator |
-| DELETE | `/api/v1/events/:id` | Delete event | Creator |
-| GET | `/api/v1/events/mine/list` | List creator's events | Creator |
+
+| Method | Endpoint                    | Description             | Auth    |
+| ------ | --------------------------- | ----------------------- | ------- |
+| GET    | `/api/v1/events`            | List published events   | Public  |
+| GET    | `/api/v1/events/:id`        | Get event by ID         | Public  |
+| GET    | `/api/v1/events/slug/:slug` | Get event by share slug | Public  |
+| GET    | `/api/v1/events/:id/share`  | Get social share links  | Public  |
+| POST   | `/api/v1/events`            | Create event            | Creator |
+| PATCH  | `/api/v1/events/:id`        | Update event            | Creator |
+| POST   | `/api/v1/events/:id/cancel` | Cancel event            | Creator |
+| DELETE | `/api/v1/events/:id`        | Delete event            | Creator |
+| GET    | `/api/v1/events/mine/list`  | List creator's events   | Creator |
 
 ### Payments
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/v1/payments/initiate` | Initiate Paystack payment | Eventee |
-| GET | `/api/v1/payments/verify/:reference` | Verify payment | Required |
-| GET | `/api/v1/payments/mine` | List my payments | Required |
-| GET | `/api/v1/payments/event/:eventId` | Event payments | Creator |
-| POST | `/api/v1/payments/webhook/paystack` | Paystack webhook | Public |
+
+| Method | Endpoint                             | Description               | Auth     |
+| ------ | ------------------------------------ | ------------------------- | -------- |
+| POST   | `/api/v1/payments/initiate`          | Initiate Paystack payment | Eventee  |
+| GET    | `/api/v1/payments/verify/:reference` | Verify payment            | Required |
+| GET    | `/api/v1/payments/mine`              | List my payments          | Required |
+| GET    | `/api/v1/payments/event/:eventId`    | Event payments            | Creator  |
+| POST   | `/api/v1/payments/webhook/paystack`  | Paystack webhook          | Public   |
 
 ### Tickets
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/v1/tickets/purchase` | Issue ticket after payment | Eventee |
-| GET | `/api/v1/tickets/mine` | List my tickets | Required |
-| GET | `/api/v1/tickets/:id` | Get ticket by ID | Required |
-| POST | `/api/v1/tickets/:id/cancel` | Cancel ticket | Eventee |
-| POST | `/api/v1/tickets/verify` | Scan and verify QR code | Creator |
-| GET | `/api/v1/tickets/event/:eventId` | List event tickets | Creator |
+
+| Method | Endpoint                         | Description                | Auth     |
+| ------ | -------------------------------- | -------------------------- | -------- |
+| POST   | `/api/v1/tickets/purchase`       | Issue ticket after payment | Eventee  |
+| GET    | `/api/v1/tickets/mine`           | List my tickets            | Required |
+| GET    | `/api/v1/tickets/:id`            | Get ticket by ID           | Required |
+| POST   | `/api/v1/tickets/:id/cancel`     | Cancel ticket              | Eventee  |
+| POST   | `/api/v1/tickets/verify`         | Scan and verify QR code    | Creator  |
+| GET    | `/api/v1/tickets/event/:eventId` | List event tickets         | Creator  |
 
 ### Notifications
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/v1/notifications/reminders` | Set reminder | Required |
-| GET | `/api/v1/notifications/reminders` | List my reminders | Required |
-| DELETE | `/api/v1/notifications/reminders/:id` | Delete reminder | Required |
+
+| Method | Endpoint                              | Description       | Auth     |
+| ------ | ------------------------------------- | ----------------- | -------- |
+| POST   | `/api/v1/notifications/reminders`     | Set reminder      | Required |
+| GET    | `/api/v1/notifications/reminders`     | List my reminders | Required |
+| DELETE | `/api/v1/notifications/reminders/:id` | Delete reminder   | Required |
 
 ### Analytics
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| GET | `/api/v1/analytics/dashboard` | Creator dashboard | Creator |
-| GET | `/api/v1/analytics/events/:eventId` | Per-event stats | Creator |
+
+| Method | Endpoint                            | Description       | Auth    |
+| ------ | ----------------------------------- | ----------------- | ------- |
+| GET    | `/api/v1/analytics/dashboard`       | Creator dashboard | Creator |
+| GET    | `/api/v1/analytics/events/:eventId` | Per-event stats   | Creator |
 
 ---
 
