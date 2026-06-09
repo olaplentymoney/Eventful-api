@@ -8,12 +8,19 @@ const options: swaggerJsdoc.Options = {
       title: 'Eventful API',
       version: '1.0.0',
       description:
-        'Eventful — your passport to unforgettable moments. API documentation for the Eventful ticketing platform.',
+        'Eventful — your passport to unforgettable moments.\n\n' +
+        '## How to use\n' +
+        '1. Register using `POST /auth/register` with role `CREATOR` or `EVENTEE`\n' +
+        '2. Login using `POST /auth/login` to get your `accessToken`\n' +
+        '3. Click the **Authorize** button and enter: `Bearer YOUR_ACCESS_TOKEN`\n' +
+        '4. All protected endpoints will now work automatically\n\n' +
+        '## Roles\n' +
+        '- **CREATOR** — create events, view tickets, scan QR codes, view analytics\n' +
+        '- **EVENTEE** — browse events, purchase tickets, set reminders',
       contact: { name: 'Eventful Team', email: 'support@eventful.com' },
     },
     servers: [
       { url: `${env.APP_URL}${env.API_PREFIX}`, description: 'Current server' },
-      { url: `http://localhost:3000${env.API_PREFIX}`, description: 'Local server' },
     ],
     components: {
       securitySchemes: {
@@ -21,6 +28,7 @@ const options: swaggerJsdoc.Options = {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
+          description: 'Enter your JWT access token: Bearer <token>',
         },
       },
       schemas: {
@@ -60,7 +68,10 @@ const options: swaggerJsdoc.Options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: ['./src/modules/**/*.routes.ts', './dist/modules/**/*.routes.ts'],
+  apis: [
+    './src/modules/**/*.routes.ts',
+    './dist/modules/**/*.routes.js',
+  ],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
